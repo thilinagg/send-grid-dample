@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SendGridEmailSample.Application.Interfaces;
 
-namespace SendGridEmailSample.Application.Queries;
+namespace SendGridEmailSample.Application.Queries.EmailList;
 
 public record GetAllEmailQuery(): IRequest<List<EmailAlertDto>>;
 

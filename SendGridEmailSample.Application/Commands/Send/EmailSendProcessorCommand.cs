@@ -3,9 +3,9 @@ using SendGridEmailSample.Application.Interfaces;
 using SendGridEmailSample.Domain.Entities;
 using SendGridEmailSample.Domain.Enums;
 
-namespace SendGridEmailSample.Application.Commands;
+namespace SendGridEmailSample.Application.Commands.Send;
 
-public record EmailSendProcessorCommand(string ReceiverEmail, string Subject, string Body): IRequest;
+public record EmailSendProcessorCommand(string ReceiverEmail, string Subject, string Body, bool IsBulk) : IRequest;
 
 
 public class EmailSendProcessorCommandHandler : IRequestHandler<EmailSendProcessorCommand>
@@ -21,23 +21,24 @@ public class EmailSendProcessorCommandHandler : IRequestHandler<EmailSendProcess
 
     public async Task Handle(EmailSendProcessorCommand request, CancellationToken cancellationToken)
     {
+
         var response = await _emailSenderService.SendSingleAsync(request.ReceiverEmail, request.Subject, request.Body);
         var sendGridMsgId = string.Empty;
-        if(response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode)
         {
             sendGridMsgId = response.Headers.SingleOrDefault(x => x.Key == "X-Message-Id").Value.SingleOrDefault();
         }
 
         var emailAlert = new EmailAlert();
         emailAlert.Create(
-            request.ReceiverEmail, 
-            request.Subject, 
+            request.ReceiverEmail,
+            request.Subject,
             request.Body,
             sendGridMsgId,
-            string.IsNullOrEmpty(sendGridMsgId)? EmailStatus.Failed: EmailStatus.Processed);
+            string.IsNullOrEmpty(sendGridMsgId) ? EmailStatus.Failed : EmailStatus.Processed);
 
         await _context.EmailAlerts.AddAsync(emailAlert);
         await _context.SaveChangesAsync(cancellationToken);
-        
+
     }
 }

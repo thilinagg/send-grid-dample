@@ -4,7 +4,7 @@ using SendGridEmailSample.Domain.Entities;
 
 namespace SendGridEmailSample.Infrastructure.Persistence.Interceptors;
 
-public class AuditableEntitySaveChangesInterceptor: SaveChangesInterceptor
+public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 {
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
@@ -23,7 +23,7 @@ public class AuditableEntitySaveChangesInterceptor: SaveChangesInterceptor
 
         foreach (var entry in context.ChangeTracker.Entries<BaseEntity>())
         {
-            if(entry.State == EntityState.Added) 
+            if (entry.State == EntityState.Added)
                 entry.Entity.CreatedDateTime = DateTime.UtcNow;
 
             if (entry.State == EntityState.Modified)

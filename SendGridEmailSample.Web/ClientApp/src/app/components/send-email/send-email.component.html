@@ -1,0 +1,34 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Send Email</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+</div>
+
+<div class="modal-body">
+    <form>
+        <!-- <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" name="bulk" [(ngModel)]="emailAlert.isBulk">
+            <label class="form-check-label" for="exampleCheck1">Send to multiple recipients</label>
+        </div>
+        <div class="alert alert-primary" role="alert" *ngIf="emailAlert.isBulk">
+            Add multiple recipients separated by a semi-colon.
+        </div> -->
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email</label>
+            <input type="email" class="form-control" name="emai" [(ngModel)]="emailAlert.receiverEmail">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Subject</label>
+            <input type="text" class="form-control" name="subject" [(ngModel)]="emailAlert.subject">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Message</label>
+            <textarea class="form-control" rows="3" name="body" [(ngModel)]="emailAlert.body"></textarea>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">
+        Close
+    </button>
+    <button type="button" class="btn btn-primary" (click)="send()" [disabled]="!isValied()">Send</button>
+</div>

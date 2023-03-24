@@ -1,13 +1,13 @@
-﻿using MediatR;
+﻿using System.Text.Json.Serialization;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SendGridEmailSample.Application.Interfaces;
 using SendGridEmailSample.Domain.Enums;
-using System.Text.Json.Serialization;
 
-namespace SendGridEmailSample.Application.Commands;
+namespace SendGridEmailSample.Application.Commands.UpdateStatus;
 
-public class SendGridStatusUpdateCommand: IRequest
+public class SendGridStatusUpdateCommand: IRequest<SendGridStatusUpdateResponseDto?>
 {
     [JsonPropertyName("email")]
     public string Email { get; set; } = default!;
@@ -24,36 +24,32 @@ public class SendGridStatusUpdateCommand: IRequest
     public string SendGridMessageId => MessageId.Split('.')[0];
 }
 
-public class SendGridStatusUpdateCommandHandler : IRequestHandler<SendGridStatusUpdateCommand>
+public class
+    SendGridStatusUpdateCommandHandler : IRequestHandler<SendGridStatusUpdateCommand, SendGridStatusUpdateResponseDto?>
 {
     private readonly IApplicationDbContext _context;
-    private readonly ILogger<SendGridStatusUpdateCommandHandler> _logger;
 
-    public SendGridStatusUpdateCommandHandler(IApplicationDbContext context, ILogger<SendGridStatusUpdateCommandHandler> logger)
+    public SendGridStatusUpdateCommandHandler(IApplicationDbContext context)
     {
         _context = context;
-       _logger = logger;
     }
 
-    public async Task Handle(SendGridStatusUpdateCommand request, CancellationToken cancellationToken)
+    public async Task<SendGridStatusUpdateResponseDto?> Handle(SendGridStatusUpdateCommand request,
+        CancellationToken cancellationToken)
     {
-        _logger.LogWarning("Event Email: {email}", request.Email);
-        _logger.LogWarning("Event EventStatus: {email}", request.EventStatus);
-        _logger.LogWarning("Event EventId: {email}", request.EventId);
-        _logger.LogWarning("Event MessageId: {email}", request.MessageId);
-        _logger.LogWarning("Event SendGridMessageId: {email}", request.SendGridMessageId);
-
         var isValidEvent = Enum.TryParse(request.EventStatus, true, out EmailStatus deliveryStatus);
         if (!isValidEvent)
-            return;
+            return null;
 
         var emailAlert = await _context.EmailAlerts
             .FirstOrDefaultAsync(e => e.SendGridMessageId == request.SendGridMessageId);
 
         if (emailAlert is null)
-            return;
+            return null;
 
         emailAlert.UpdateStatus(deliveryStatus);
         await _context.SaveChangesAsync(cancellationToken);
+
+        return new SendGridStatusUpdateResponseDto(emailAlert.Id, emailAlert.Status);
     }
 }
