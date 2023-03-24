@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using SendGridEmailSample.Application.Commands;
 using SendGridEmailSample.Application.Commands.Send;
 using SendGridEmailSample.Application.Commands.UpdateStatus;
-using SendGridEmailSample.Application.Queries;
 using SendGridEmailSample.Application.Queries.EmailList;
 using SendGridEmailSample.Web.Hubs;
 

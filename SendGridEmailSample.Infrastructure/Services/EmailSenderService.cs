@@ -34,32 +34,6 @@ public sealed class EmailSenderService : IEmailSenderService
         return await client.SendEmailAsync(msg);
     }
 
-    public async Task<Response> SendSingleTemplateEmailToMultipleRecipientsAsync(List<string> receiversEmails,
-        string subject, string body)
-    {
-        var client = new SendGridClient(_sendGridConfigs.ApiKey);
-        var dynamicDataObject = new
-        {
-            email_subject = subject,
-            email_body = body,
-            send_date = DateTime.Now.ToString("dd/MM/yyyy"),
-        };
-
-        var tos = new List<EmailAddress>();
-        foreach (var email in receiversEmails)
-        {
-            tos.Add(new EmailAddress(email));
-        }
-
-        var msg = MailHelper.CreateSingleTemplateEmailToMultipleRecipients(
-            new EmailAddress(_sendGridConfigs.SenderEmail, _sendGridConfigs.SenderName),
-            tos,
-            _sendGridConfigs.TemplateId,
-            dynamicDataObject);
-
-        return await client.SendEmailAsync(msg);
-    }
-
     public async Task<Response> SendSingleTemplateEmailToMultipleRecipientsAsync(List<string> receiversEmails, string subject, string body)
     {
         var client = new SendGridClient(_sendGridConfigs.ApiKey);
