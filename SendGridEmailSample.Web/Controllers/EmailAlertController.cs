@@ -18,7 +18,7 @@ public class EmailAlertController : ApiControllerBase
 
     [HttpPost]
     [Route("send")]
-    public async Task<IActionResult> SendEmail(EmailSendProcessorCommandHandler command)
+    public async Task<IActionResult> SendEmail(EmailSendProcessorCommand command)
     {
         await Mediator.Send(command);
         return Ok();
@@ -43,15 +43,6 @@ public class EmailAlertController : ApiControllerBase
                 await _hub.Clients.All.SendAsync("StatusUpdated", response);
         }
 
-        return Ok();
-    }
-
-    [HttpGet]
-    [Route("hub-test")]
-    public async Task<IActionResult> HubTest(Guid id, int statusId)
-    {
-        await _hub.Clients.All.SendAsync("StatusUpdated",
-            new { Id = id.ToString().ToLower(), Status = statusId });
         return Ok();
     }
 }

@@ -16,7 +16,7 @@ public class GetAllEmailQueryHandler : IRequestHandler<GetAllEmailQuery, List<Em
     public async Task<List<EmailAlertDto>> Handle(GetAllEmailQuery request, CancellationToken cancellationToken)
     {
         List<EmailAlertDto> emailList = await _context.EmailAlerts
-            .OrderBy(x => x.CreatedDateTime)
+            .OrderByDescending(x => x.CreatedDateTime)
             .Select(e => new EmailAlertDto(
                 e.Id,
                 e.ReceiverEmail,
