@@ -48,10 +48,10 @@ public class EmailAlertController : ApiControllerBase
 
     [HttpGet]
     [Route("hub-test")]
-    public async Task<IActionResult> HubTest(int statusId)
+    public async Task<IActionResult> HubTest(Guid id, int statusId)
     {
         await _hub.Clients.All.SendAsync("StatusUpdated",
-            new { Id = "C418FE82-E076-4519-550C-08DB2C07C03E".ToLower(), Status = statusId });
+            new { Id = id.ToString().ToLower(), Status = statusId });
         return Ok();
     }
 }

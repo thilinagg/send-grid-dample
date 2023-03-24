@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("defaultCorsPolicy", builder =>
     {
-        builder.WithOrigins("http://localhost:4200")
+        builder.WithOrigins("http://localhost:4200", "https://stplazasendgridtest.z6.web.core.windows.net")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
