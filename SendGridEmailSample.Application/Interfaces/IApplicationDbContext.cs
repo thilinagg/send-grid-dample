@@ -6,5 +6,5 @@ namespace SendGridEmailSample.Application.Interfaces;
 public interface IApplicationDbContext
 {
     DbSet<EmailAlert> EmailAlerts { get; }
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

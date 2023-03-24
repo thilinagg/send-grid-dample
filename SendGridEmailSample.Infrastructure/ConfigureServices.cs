@@ -20,8 +20,10 @@ public static class ConfigureServices
         });
 
         services.AddScoped<AuditableEntitySaveChangesInterceptor>();
+
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")));
+
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
         services.AddTransient<IEmailSenderService, EmailSenderService>();

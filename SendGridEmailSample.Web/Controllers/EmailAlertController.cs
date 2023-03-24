@@ -18,7 +18,7 @@ public class EmailAlertController : ApiControllerBase
 
     [HttpPost]
     [Route("send")]
-    public async Task<IActionResult> SendEmail(EmailSendProcessorCommand command)
+    public async Task<IActionResult> SendEmail(EmailSendProcessorCommandHandler command)
     {
         await Mediator.Send(command);
         return Ok();

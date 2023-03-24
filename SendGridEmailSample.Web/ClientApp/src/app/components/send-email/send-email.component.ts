@@ -9,26 +9,40 @@ import { EmailAlertService } from 'src/app/services/email-alert.service';
 })
 export class SendEmailComponent {
   emailAlert = new EmailAlertModel();
+  isSaving = false;
 
-  constructor(private emailAlertService: EmailAlertService){}
+  constructor(private emailAlertService: EmailAlertService) { }
 
-  send(){
-    if(this.emailAlert.receiverEmail == "" || this.emailAlert.subject == "" || this.emailAlert.body == ""){
+  send() {
+    if (this.emailAlert.receiverEmail == "" || this.emailAlert.subject == "" || this.emailAlert.body == "") {
       return;
     }
 
-    this.emailAlertService.send(this.emailAlert).subscribe({
-      next: ()=>{
+    if (this.isRecipientCountExeed()) {
+      return;
+    }
 
+    this.isSaving = true;
+    this.emailAlertService.send(this.emailAlert).subscribe({
+      next: () => {
+        this.isSaving = false;
       }
     })
   }
 
-  isValied(){
+  isValied() {
     return this.emailAlert.receiverEmail != "" && this.emailAlert.subject != "" && this.emailAlert.body != "";
   }
 
-  close(){
+  isRecipientCountExeed() {
+    return this.emailAlert.receiverEmail.split(";")?.length > 5;
+  }
+
+  enableBulkEmail() {
+    return this.emailAlert.isBulk == false && (this.emailAlert.receiverEmail.includes(',') || this.emailAlert.receiverEmail.includes(';'));
+  }
+
+  close() {
     this.emailAlertService.closeModal();
   }
 }

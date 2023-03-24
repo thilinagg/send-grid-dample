@@ -25,6 +25,7 @@ public sealed class EmailSenderService : IEmailSenderService
             email_body = body,
             send_date = DateTime.Now.ToString("dd/MM/yyyy"),
         };
+
         var msg = MailHelper.CreateSingleTemplateEmail(
             new EmailAddress(_sendGridConfigs.SenderEmail, _sendGridConfigs.SenderName),
             new EmailAddress(receiverEmail),
@@ -44,15 +45,15 @@ public sealed class EmailSenderService : IEmailSenderService
             send_date = DateTime.Now.ToString("dd/MM/yyyy"),
         };
 
-        var tos = new List<EmailAddress>();
+        var toEmails = new List<EmailAddress>();
         foreach (var email in receiversEmails)
         {
-            tos.Add(new EmailAddress(email));
+            toEmails.Add(new EmailAddress(email));
         }
 
         var msg = MailHelper.CreateSingleTemplateEmailToMultipleRecipients(
             new EmailAddress(_sendGridConfigs.SenderEmail, _sendGridConfigs.SenderName),
-            tos,
+            toEmails,
             _sendGridConfigs.TemplateId,
             dynamicDataObject);
 
