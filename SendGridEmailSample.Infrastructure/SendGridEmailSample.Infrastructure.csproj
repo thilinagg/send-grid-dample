@@ -22,4 +22,8 @@
     <ProjectReference Include="..\SendGridEmailSample.Domain\SendGridEmailSample.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Templates\" />
+  </ItemGroup>
+
 </Project>
