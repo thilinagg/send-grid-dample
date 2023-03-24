@@ -5,7 +5,7 @@ using SendGridEmailSample.Domain.Enums;
 
 namespace SendGridEmailSample.Application.Commands;
 
-public record EmailSendProcessorCommand(string ReceiverEmail, string Subject, string Body): IRequest;
+public record EmailSendProcessorCommand(string ReceiverEmail, string Subject, string Body, bool IsBulk): IRequest;
 
 
 public class EmailSendProcessorCommandHandler : IRequestHandler<EmailSendProcessorCommand>
@@ -21,6 +21,7 @@ public class EmailSendProcessorCommandHandler : IRequestHandler<EmailSendProcess
 
     public async Task Handle(EmailSendProcessorCommand request, CancellationToken cancellationToken)
     {
+        
         var response = await _emailSenderService.SendSingleAsync(request.ReceiverEmail, request.Subject, request.Body);
         var sendGridMsgId = string.Empty;
         if(response.IsSuccessStatusCode)
